@@ -138,7 +138,7 @@ model.eval()  # Disable dropout
 
 context = torch.Tensor([[0]]).int().to(device)  
 
-red_o = {1,2,3,4,5,6,7,8,9,10,11,12}
+red_o = {1,2,3,4,5,6,7,8,9,10,11,12,33}
 white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
 
 
@@ -150,7 +150,7 @@ def ask_name():
     
     if resp=='':
         context = torch.Tensor([[0]]).int().to(device)
-        red_o = {1,2,3,4,5,6,7,8,9,10,11,12}
+        red_o = {1,2,3,4,5,6,7,8,9,10,11,12,33}
         white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
         return ""
 
@@ -173,46 +173,56 @@ def ask_name():
        red_o.add(resp[0, i+1].item()) 
       i+=2  
 
-   k=0
-   b=0
-   while 
 
-    
-    while b not in red_o:  
+
+
+
+   a=0
+   k=0 
+   while a != 33: 
+    while a not in red_o:  
       logits, _ = m(context.int())
       logits = logits[-1,-1] 
-      _, b = torch.topk(logits, k+1)
+      _, a = torch.topk(logits, k+1)
       print(torch.topk(logits, k+1))
-      b = b[k].item()
+      a = a[k].item()
       k += 1  
-    
+
+   context = torch.cat([context, torch.Tensor([[a]]).to(device)], dim=1)
+   j=0
+   while b in o_red.union(white_o) and j<3:          
     logits, _ = m(context.int())
     logits = logits[-1,-1] 
-    _, c = torch.topk(logits, k+1)
-    print(torch.topk(logits, k+1))
-    c = c[k].item()
-        
-        if c in o_red.union(white_o):    
-          if k<4:  
-            k += 1
-            continue
-          else:
-            context = context[:, :-1]
-            k = 1
-            b=0
-            continue
-        if c==33:
-            logits, _ = m(context.int())
-            logits = logits[-1,-1] 
-            d = logits.argmax().item()
-            if d in o_red.union(white_o):   ############
-               k += 1
-               continue 
-            context = torch.cat([context, torch.Tensor([[b,33,d]]).to(device)], dim=1)
-            white_o.remove(b)
-            white_o.add(d)
+    _, b = torch.topk(logits, j+1)
+    print(torch.topk(logits, j+1))
+    b = b[j].item()        
+    j+=1    
+       
+   if j==3:
+     context = context[:, :-1]
+     k = 1    
+     a = 0 
+     continue
 
+   context = torch.cat([context, torch.Tensor([[b]]).to(device)], dim=1) 
+   if b==33:
+    logits, _ = m(context.int())
+    logits = logits[-1,-1] 
+    c = logits.argmax().item()
+    if c in o_red.union(white_o):   
+       context = context[:, :-2]
+       k+=1         
+       continue 
+    else:
+     context = torch.cat([context, torch.Tensor([[c]]).to(device)], dim=1)    
+
+     logits, _ = m(context.int())
+     logits = logits[-1,-1] 
+     a = logits.argmax().item()   
             
+
+
+        
             
         else:
           context = torch.cat([context, torch.Tensor([[b,c]]).to(device)], dim=1)
