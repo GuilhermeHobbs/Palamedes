@@ -138,7 +138,7 @@ model.eval()  # Disable dropout
 
 context = torch.Tensor([[0]]).int().to(device)  
 
-red_o = {1,2,3,4,5,6,7,8,9,10,11,12,33}
+red_o = {1,2,3,4,5,6,7,8,9,10,11,12}
 white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
 
 
@@ -150,7 +150,7 @@ def ask_name():
     
     if resp=='':
         context = torch.Tensor([[0]]).int().to(device)
-        red_o = {1,2,3,4,5,6,7,8,9,10,11,12,33}
+        red_o = {1,2,3,4,5,6,7,8,9,10,11,12}
         white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
         return ""
 
@@ -179,8 +179,9 @@ def ask_name():
     
     a=0
     k=0 
-    b=0 
-    while a != 33: 
+    b=0
+    End_of_jump = False
+    while End_of_jump == False:
      while a not in red_o:  
       logits, _ = m(context.int())
       logits = logits[-1,-1] 
@@ -210,17 +211,32 @@ def ask_name():
         logits, _ = m(context.int())
         logits = logits[-1,-1] 
         c = logits.argmax().item()
-        if c in o_red.union(white_o):   
+        if c in o_red.union(white_o):    ###############  
            context = context[:, :-2]
            k+=1         
            continue 
         else:
            context = torch.cat([context, torch.Tensor([[c]]).to(device)], dim=1)    
            white_o.remove(a) 
-           logits, _ = m(context.int())
-           logits = logits[-1,-1] 
-           a = logits.argmax().item()   
-              
+           white_o.add(c)  
+           while True:
+            logits, _ = m(context.int())
+            logits = logits[-1,-1] 
+            a = logits.argmax().item()   
+            if a != 33:
+                End_of_jump = True
+            else:
+                old_b = b
+                logits, _ = m(context.int())
+                logits = logits[-1,-1] 
+                b = logits.argmax().item()
+                if b in o_red.union(white_o) or b==33:   
+                   End_of_jump = True
+                else:
+                  context = torch.cat([context, torch.Tensor([[33,b]]).to(device)], dim=1)      
+                  white_o.discard(c)
+                  white_o.remove(old_b)
+                  white_o.add(b)  
      else:  
          white_o.remove(a)
          white_o.add(b)
