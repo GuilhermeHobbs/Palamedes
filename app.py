@@ -172,68 +172,61 @@ def ask_name():
        red_o.remove(resp[0, i].item())  
        red_o.add(resp[0, i+1].item()) 
       i+=2  
-
-
-
-
-
-   a=0
-   k=0 
-   while a != 33: 
-    while a not in red_o:  
+    
+    
+     
+    
+    
+    a=0
+    k=0 
+    b=0 
+    while a != 33: 
+     while a not in red_o:  
       logits, _ = m(context.int())
       logits = logits[-1,-1] 
       _, a = torch.topk(logits, k+1)
       print(torch.topk(logits, k+1))
       a = a[k].item()
       k += 1  
-
-   context = torch.cat([context, torch.Tensor([[a]]).to(device)], dim=1)
-   j=0
-   while b in o_red.union(white_o) and j<3:          
-    logits, _ = m(context.int())
-    logits = logits[-1,-1] 
-    _, b = torch.topk(logits, j+1)
-    print(torch.topk(logits, j+1))
-    b = b[j].item()        
-    j+=1    
+     
+     context = torch.cat([context, torch.Tensor([[a]]).to(device)], dim=1)
+     j=0
+     while b in o_red.union(white_o) and j<3:          
+        logits, _ = m(context.int())
+        logits = logits[-1,-1] 
+        _, b = torch.topk(logits, j+1)
+        print(torch.topk(logits, j+1))
+        b = b[j].item()        
+        j+=1    
        
-   if j==3:
-     context = context[:, :-1]
-     k = 1    
-     a = 0 
-     continue
-
-   context = torch.cat([context, torch.Tensor([[b]]).to(device)], dim=1) 
-   if b==33:
-    logits, _ = m(context.int())
-    logits = logits[-1,-1] 
-    c = logits.argmax().item()
-    if c in o_red.union(white_o):   
-       context = context[:, :-2]
-       k+=1         
-       continue 
-    else:
-     context = torch.cat([context, torch.Tensor([[c]]).to(device)], dim=1)    
-
-     logits, _ = m(context.int())
-     logits = logits[-1,-1] 
-     a = logits.argmax().item()   
-            
-
-
-        
-            
+     if j==3:
+         context = context[:, :-1]
+         k = 1    
+         a = 0 
+         continue
+     
+     context = torch.cat([context, torch.Tensor([[b]]).to(device)], dim=1) 
+     if b==33:
+        logits, _ = m(context.int())
+        logits = logits[-1,-1] 
+        c = logits.argmax().item()
+        if c in o_red.union(white_o):   
+           context = context[:, :-2]
+           k+=1         
+           continue 
         else:
-          context = torch.cat([context, torch.Tensor([[b,c]]).to(device)], dim=1)
-          white_o.remove(b)
-          white_o.add(c)
-          k=0  
-
-    logits, _ = m(context.int())
-    logits = logits[-1,-1] 
-    c = logits.argmax()
-
+           context = torch.cat([context, torch.Tensor([[c]]).to(device)], dim=1)    
+           white_o.remove(a) 
+           logits, _ = m(context.int())
+           logits = logits[-1,-1] 
+           a = logits.argmax().item()   
+              
+     else:  
+         white_o.remove(a)
+         white_o.add(b)
+         break
+            
+       
 
 
 
