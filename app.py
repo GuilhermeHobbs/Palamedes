@@ -204,13 +204,25 @@ def ask_name():
         if c==33:
             logits, _ = m(context.int())
             logits = logits[-1,-1] 
-            c = logits.argmax()
-            continue
+            d = logits.argmax().item()
+            if d in o_red.union(white_o):   ############
+               k += 1
+               continue 
+            context = torch.cat([context, torch.Tensor([[b,33,d]]).to(device)], dim=1)
+            white_o.remove(b)
+            white_o.add(d)
+
+            
+            
         else:
           context = torch.cat([context, torch.Tensor([[b,c]]).to(device)], dim=1)
           white_o.remove(b)
           white_o.add(c)
-       
+          k=0  
+
+    logits, _ = m(context.int())
+    logits = logits[-1,-1] 
+    c = logits.argmax()
 
 
 
