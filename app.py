@@ -138,7 +138,7 @@ model.eval()  # Disable dropout
 
 context = torch.Tensor([[0]]).int().to(device)  
 
-red_o = {0,1,2,3,4,5,6,7,8,9,10,11,12}
+red_o = {1,2,3,4,5,6,7,8,9,10,11,12}
 white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
 
 
@@ -150,7 +150,7 @@ def ask_name():
     
     if resp=='':
         context = torch.Tensor([[0]]).int().to(device)
-        red_o = {0,1,2,3,4,5,6,7,8,9,10,11,12}
+        red_o = {1,2,3,4,5,6,7,8,9,10,11,12}
         white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
         return ""
 
@@ -172,10 +172,51 @@ def ask_name():
        red_o.remove(resp[0, i].item())  
        red_o.add(resp[0, i+1].item()) 
       i+=2  
+
+   k=0
+   b=0
+   while 
+
     
-    k=0
-    i=0
+    while b not in red_o:  
+      logits, _ = m(context.int())
+      logits = logits[-1,-1] 
+      _, b = torch.topk(logits, k+1)
+      print(torch.topk(logits, k+1))
+      b = b[k].item()
+      k += 1  
     
+    logits, _ = m(context.int())
+    logits = logits[-1,-1] 
+    _, c = torch.topk(logits, k+1)
+    print(torch.topk(logits, k+1))
+    c = c[k].item()
+        
+        if c in o_red.union(white_o):    
+          if k<4:  
+            k += 1
+            continue
+          else:
+            context = context[:, :-1]
+            k = 1
+            b=0
+            continue
+        if c==33:
+            logits, _ = m(context.int())
+            logits = logits[-1,-1] 
+            c = logits.argmax()
+            continue
+        else:
+          context = torch.cat([context, torch.Tensor([[b,c]]).to(device)], dim=1)
+          white_o.remove(b)
+          white_o.add(c)
+       
+
+
+
+
+
+
     while i-quantos_33<2 and not(i==5 and quantos_33==2):
 
       logits, _ = m(context.int())
@@ -210,7 +251,7 @@ def ask_name():
           context = torch.cat([context, torch.Tensor([[33,b.item()]]).to(device)], dim=1)
           print (i,"TWO depois",context[0,-2],context[0,-1], flush=True)  # Force immediate flushing
           sys.stdout.flush()
-          i = 1
+          i += 2
           continue
        print("NOT else:",b.item(),white_o.union(red_o),context,middle, flush=True)  # Force immediate flushing
        sys.stdout.flush()
