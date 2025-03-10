@@ -146,7 +146,7 @@ white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
 def ask_name():
     global m,context,white_o,red_o
      
-    resp = request.args.get('resp', '')  
+    resp = request.args.get('move', '')  
     
     if resp=='':
         context = torch.Tensor([[0]]).int().to(device)
@@ -157,17 +157,21 @@ def ask_name():
     resp = torch.tensor([[int(x) for x in resp.split('-')]])
     context = torch.cat([context, resp], dim=1)
 
-    for i in range(context.shape[1]):
-      if context[0, i].item()==33:  
-        if (context[0, i-1].item()+context[0, i+1].item())%16 < 8:
-             middle = math.floor((context[0, i-1].item()+context[0, i+1].item())/2)
+    for i in range(resp.shape[1]):
+      if resp[0, i].item()==33:  
+        if (resp[0, i-1].item()+resp[0, i+1].item())%16 < 8:
+             middle = math.floor((resp[0, i-1].item()+resp[0, i+1].item())/2)
         else:
-             middle = math.ceil((context[0, i-1].item()+context[0, i+1].item())/2)
+             middle = math.ceil((resp[0, i-1].item()+resp[0, i+1].item())/2)
         
         white_o.remove(middle)
-        red_o.add(context[0, i+1].item())
-    else:
-       red_o.add(b) 
+        red_o.remove(resp[0, i-1].item())  
+        red_o.add(resp[0, i+1].item())
+        
+      else:
+       red_o.remove(resp[0, i].item())  
+       red_o.add(resp[0, i+1].item()) 
+      i+=2  
     
     k=0
     i=0
