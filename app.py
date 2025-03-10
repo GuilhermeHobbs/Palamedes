@@ -211,15 +211,23 @@ def ask_name():
         logits, _ = m(context.int())
         logits = logits[-1,-1] 
         c = logits.argmax().item()
-        if c in o_red.union(white_o):    ###############  
+
+        if (a+c)%16 < 8:
+            middle = math.floor((a+c)/2)
+        else:
+            middle = math.ceil((a+c)/2)     
+         
+        if c in o_red.union(white_o) or middle not in red_o:     
            context = context[:, :-2]
            k+=1         
            continue 
         else:
            context = torch.cat([context, torch.Tensor([[c]]).to(device)], dim=1)    
            white_o.remove(a) 
-           white_o.add(c)  
-           while True:
+           white_o.add(c)
+           red_o.remove(middle)
+           old_b = c   
+           while End_of_jump == False:
             logits, _ = m(context.int())
             logits = logits[-1,-1] 
             a = logits.argmax().item()   
@@ -227,14 +235,22 @@ def ask_name():
                 End_of_jump = True
             else:
                 old_b = b
+                context = torch.cat([context, torch.Tensor([[33]]).to(device)], dim=1)      
                 logits, _ = m(context.int())
                 logits = logits[-1,-1] 
                 b = logits.argmax().item()
-                if b in o_red.union(white_o) or b==33:   
-                   End_of_jump = True
+            
+                if (old_b+b)%16 < 8:
+                    middle = math.floor((old_b+b)/2)
+                else:
+                    middle = math.ceil((old_b+b)/2)     
+                
+                if b in o_red.union(white_o) or b==33 or middle not in red_o:   
+                   context = context[:, :-1]
+                    End_of_jump = True
                 else:
                   context = torch.cat([context, torch.Tensor([[33,b]]).to(device)], dim=1)      
-                  white_o.discard(c)
+                  red_o.remove(middle)
                   white_o.remove(old_b)
                   white_o.add(b)  
      else:  
