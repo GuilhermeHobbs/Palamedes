@@ -1,0 +1,5 @@
+flask
+flask-cors
+numpy
+gunicorn
+torch==2.1.0 -f https://download.pytorch.org/whl/torch_stable.html
