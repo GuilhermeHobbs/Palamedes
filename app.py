@@ -176,96 +176,10 @@ def ask_name():
           white_o.remove(middle)
           i+=2
         red_o.add(resp[0, i-1].item())
-
-"""    
-     
-        
-    a=0
-    k=0 
-    b=0
-    End_of_jump = False
-    while End_of_jump == False:
-     while a not in red_o:  
-      logits, _ = m(context.int())
-      logits = logits[-1,-1] 
-      _, a = torch.topk(logits, k+1)
-      print(torch.topk(logits, k+1), flush=True)  # Force immediate flushing
-      sys.stdout.flush()
-      a = a[k].item()
-      k += 1  
-     
-     context = torch.cat([context, torch.Tensor([[a]]).to(device)], dim=1)
-     j=0
-     while b in red_o.union(white_o) and j<3:          
-        logits, _ = m(context.int())
-        logits = logits[-1,-1] 
-        _, b = torch.topk(logits, j+1)
-        print(torch.topk(logits, j+1), flush=True)  # Force immediate flushing
-        sys.stdout.flush()
-        b = b[j].item()        
-        j+=1    
-       
-     if j==3:
-         context = context[:, :-1]
-         k = 1    
-         a = 0 
-         continue
-     
-     context = torch.cat([context, torch.Tensor([[b]]).to(device)], dim=1) 
-     if b==33:
-        logits, _ = m(context.int())
-        logits = logits[-1,-1] 
-        c = logits.argmax().item()
-
-        if (a+c)%16 < 8:
-            middle = math.floor((a+c)/2)
-        else:
-            middle = math.ceil((a+c)/2)     
-         
-        if c in red_o.union(white_o) or middle not in red_o:     
-           context = context[:, :-2]
-           k+=1         
-           continue 
-        else:
-           context = torch.cat([context, torch.Tensor([[c]]).to(device)], dim=1)    
-           white_o.remove(a) 
-           white_o.add(c)
-           red_o.remove(middle)
-           old_b = c   
-           while End_of_jump == False:
-            logits, _ = m(context.int())
-            logits = logits[-1,-1] 
-            a = logits.argmax().item()   
-            if a != 33:
-                End_of_jump = True
-            else:
-                old_b = b
-                context = torch.cat([context, torch.Tensor([[33]]).to(device)], dim=1)      
-                logits, _ = m(context.int())
-                logits = logits[-1,-1] 
-                b = logits.argmax().item()
-            
-                if (old_b+b)%16 < 8:
-                    middle = math.floor((old_b+b)/2)
-                else:
-                    middle = math.ceil((old_b+b)/2)     
-                
-                if b in red_o.union(white_o) or b==33 or middle not in red_o:   
-                   context = context[:, :-1]
-                   End_of_jump = True
-                else:
-                  context = torch.cat([context, torch.Tensor([[33,b]]).to(device)], dim=1)      
-                  red_o.remove(middle)
-                  white_o.remove(old_b)
-                  white_o.add(b)  
-     else:  
-         white_o.remove(a)
-         white_o.add(b)
-         break
-    print("CONTEXT:",context, flush=True)  # Force immediate flushing
-    sys.stdout.flush()           
-"""
-
+    print(red_o,flush=True)  # Force immediate flushing
+    sys.stdout.flush()     
+    print(white_o,flush=True)  # Force immediate flushing
+    sys.stdout.flush()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)  # Render requires explicit host/port
