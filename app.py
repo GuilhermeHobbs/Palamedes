@@ -177,7 +177,7 @@ def ask_name():
           i+=2
         red_o.add(resp[0, i-1].item())
 
-    
+"""    
      
         
     a=0
@@ -264,7 +264,7 @@ def ask_name():
          break
     print("CONTEXT:",context, flush=True)  # Force immediate flushing
     sys.stdout.flush()           
-
+"""
 
 
 if __name__ == '__main__':
