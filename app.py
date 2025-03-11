@@ -279,7 +279,7 @@ def ask_name():
          break
     print(i,"CONTEXT:",context, flush=True)  # Force immediate flushing
     sys.stdout.flush()           
-
+    return "hey"
 
 
 if __name__ == '__main__':
