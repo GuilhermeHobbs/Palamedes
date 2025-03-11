@@ -241,15 +241,19 @@ def ask_name():
            k+=1         
            continue 
         else:
-           context = torch.cat([context, torch.Tensor([[c]]).to(device)], dim=1)    
+           context = torch.cat([context, torch.Tensor([[c]]).to(device)], dim=1)
+           print("Context [[c]]",context, flush=True)  # Force immediate flushing
+           sys.stdout.flush()    
            white_o.remove(a) 
            white_o.add(c)
            red_o.remove(middle)
            old_b = c   
+           i=3
            while End_of_jump == False:
             logits, _ = m(context.int())
             logits = logits[-1,-1] 
-            a = logits.argmax().item()   
+            a = logits.argmax().item()
+            print("a = logits.argmax().item()",a)   
             if a != 33:
                 End_of_jump = True
             else:
@@ -266,13 +270,15 @@ def ask_name():
                 
                 if b in red_o.union(white_o) or b==33 or middle not in red_o:   
                    context = context[:, :-1]
+                   print("if b in red_o.union(white_o) or b==33 or middle not in red_o:",context)   
                    End_of_jump = True
                 else:
-                  context = torch.cat([context, torch.Tensor([[33,b]]).to(device)], dim=1)      
+                  context = torch.cat([context, torch.Tensor([[b]]).to(device)], dim=1)  ###########    
                   red_o.remove(middle)
                   white_o.remove(old_b)
                   white_o.add(b)
-                  i+=2  
+                  i+=2
+                  print("i+=2",i)  
      else:  
          white_o.remove(a)
          white_o.add(b)
