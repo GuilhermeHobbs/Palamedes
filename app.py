@@ -152,6 +152,7 @@ def ask_name():
         context = torch.Tensor([[0]]).int().to(device)
         red_o = {1,2,3,4,5,6,7,8,9,10,11,12}
         white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
+        print("RESTART")
         return ""
 
     resp = torch.tensor([[int(x) for x in resp.split('-')]])
