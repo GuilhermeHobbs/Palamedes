@@ -183,7 +183,7 @@ def ask_name():
 
     
      
-        
+    i=0    
     a=0
     k=0 
     b=0
@@ -196,9 +196,13 @@ def ask_name():
       print(torch.topk(logits, k+1), flush=True)  # Force immediate flushing
       sys.stdout.flush()
       a = a[k].item()
+      print(k,"a[k].item()",a, flush=True)  # Force immediate flushing
+      sys.stdout.flush()
       k += 1  
      
      context = torch.cat([context, torch.Tensor([[a]]).to(device)], dim=1)
+     print(i,"Context first",context, flush=True)  # Force immediate flushing
+     sys.stdout.flush()
      j=0
      while b in red_o.union(white_o) and j<3:          
         logits, _ = m(context.int())
@@ -206,7 +210,9 @@ def ask_name():
         _, b = torch.topk(logits, j+1)
         print(torch.topk(logits, j+1), flush=True)  # Force immediate flushing
         sys.stdout.flush()
-        b = b[j].item()        
+        b = b[j].item()
+        print(j,"b[k].item()",b, flush=True)  # Force immediate flushing
+        sys.stdout.flush() 
         j+=1    
        
      if j==3:
@@ -216,6 +222,9 @@ def ask_name():
          continue
      
      context = torch.cat([context, torch.Tensor([[b]]).to(device)], dim=1) 
+     i=2
+     print("Context after",context, flush=True)  # Force immediate flushing
+     sys.stdout.flush()   
      if b==33:
         logits, _ = m(context.int())
         logits = logits[-1,-1] 
@@ -225,7 +234,8 @@ def ask_name():
             middle = math.floor((a+c)/2)
         else:
             middle = math.ceil((a+c)/2)     
-         
+        print("Middle",middle, flush=True)  # Force immediate flushing
+        sys.stdout.flush()    
         if c in red_o.union(white_o) or middle not in red_o:     
            context = context[:, :-2]
            k+=1         
@@ -261,12 +271,13 @@ def ask_name():
                   context = torch.cat([context, torch.Tensor([[33,b]]).to(device)], dim=1)      
                   red_o.remove(middle)
                   white_o.remove(old_b)
-                  white_o.add(b)  
+                  white_o.add(b)
+                  i+=2  
      else:  
          white_o.remove(a)
          white_o.add(b)
          break
-    print("CONTEXT:",context, flush=True)  # Force immediate flushing
+    print(i,"CONTEXT:",context, flush=True)  # Force immediate flushing
     sys.stdout.flush()           
 
 
