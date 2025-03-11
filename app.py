@@ -138,7 +138,7 @@ model.eval()  # Disable dropout
 
 context = torch.Tensor([[0]]).int().to(device)  
 
-red_o = {1,2,3,4,5,6,7,8,9,10,11,12}
+red_o = {1,2,3,4,5,6,7,8,9,10,11,12,0}
 white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
 
 
@@ -186,7 +186,6 @@ def ask_name():
     i=0    
     a=0
     k=0 
-    b=0
     End_of_jump = False
     while End_of_jump == False:
      while a not in white_o:  
@@ -204,6 +203,7 @@ def ask_name():
      print(i,"Context first",context, flush=True)  # Force immediate flushing
      sys.stdout.flush()
      j=0
+     b=0
      while b in red_o.union(white_o) and j<3:          
         logits, _ = m(context.int())
         logits = logits[-1,-1] 
