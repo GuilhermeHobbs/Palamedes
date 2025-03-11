@@ -152,13 +152,15 @@ def ask_name():
         context = torch.Tensor([[0]]).int().to(device)
         red_o = {1,2,3,4,5,6,7,8,9,10,11,12}
         white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
-        print("RESTART")
+        print("RESTART", flush=True)  # Force immediate flushing
+        sys.stdout.flush()
         return ""
 
     resp = torch.tensor([[int(x) for x in resp.split('-')]])
     context = torch.cat([context, resp], dim=1)
 
-    print("Resp", context)
+    print("Resp", context, flush=True)  # Force immediate flushing
+    sys.stdout.flush()
 
     red_o.remove(resp[0, 0].item())
     if resp[0, 1].item() != 33:
@@ -187,7 +189,8 @@ def ask_name():
       logits, _ = m(context.int())
       logits = logits[-1,-1] 
       _, a = torch.topk(logits, k+1)
-      print(torch.topk(logits, k+1))
+      print(torch.topk(logits, k+1), flush=True)  # Force immediate flushing
+      sys.stdout.flush()
       a = a[k].item()
       k += 1  
      
@@ -197,7 +200,8 @@ def ask_name():
         logits, _ = m(context.int())
         logits = logits[-1,-1] 
         _, b = torch.topk(logits, j+1)
-        print(torch.topk(logits, j+1))
+        print(torch.topk(logits, j+1), flush=True)  # Force immediate flushing
+        sys.stdout.flush()
         b = b[j].item()        
         j+=1    
        
@@ -258,7 +262,8 @@ def ask_name():
          white_o.remove(a)
          white_o.add(b)
          break
-    print("CONTEXT:",context)            
+    print("CONTEXT:",context, flush=True)  # Force immediate flushing
+    sys.stdout.flush()           
 
 
 
