@@ -175,8 +175,7 @@ def ask_name():
     
     
      
-    
-    
+        
     a=0
     k=0 
     b=0
@@ -192,7 +191,7 @@ def ask_name():
      
      context = torch.cat([context, torch.Tensor([[a]]).to(device)], dim=1)
      j=0
-     while b in o_red.union(white_o) and j<3:          
+     while b in red_o.union(white_o) and j<3:          
         logits, _ = m(context.int())
         logits = logits[-1,-1] 
         _, b = torch.topk(logits, j+1)
@@ -217,7 +216,7 @@ def ask_name():
         else:
             middle = math.ceil((a+c)/2)     
          
-        if c in o_red.union(white_o) or middle not in red_o:     
+        if c in red_o.union(white_o) or middle not in red_o:     
            context = context[:, :-2]
            k+=1         
            continue 
@@ -245,9 +244,9 @@ def ask_name():
                 else:
                     middle = math.ceil((old_b+b)/2)     
                 
-                if b in o_red.union(white_o) or b==33 or middle not in red_o:   
+                if b in red_o.union(white_o) or b==33 or middle not in red_o:   
                    context = context[:, :-1]
-                    End_of_jump = True
+                   End_of_jump = True
                 else:
                   context = torch.cat([context, torch.Tensor([[33,b]]).to(device)], dim=1)      
                   red_o.remove(middle)
@@ -257,92 +256,8 @@ def ask_name():
          white_o.remove(a)
          white_o.add(b)
          break
-            
-       
+    print("CONTEXT:",context)            
 
-
-
-
-
-    while i-quantos_33<2 and not(i==5 and quantos_33==2):
-
-      logits, _ = m(context.int())
-      logits = logits[-1,-1] 
-      _, b = torch.topk(logits, k+1)
-      print(torch.topk(logits, k+1))
-      b = b[k]
-      print(i,"antes: ",b,context,white_o,red_o, flush=True)  # Force immediate flushing
-      sys.stdout.flush()
-
-      if b==33:
-       d = torch.cat([context, torch.Tensor([[33]]).to(device)], dim=1)
-       l, _ = m(d.int())
-       l = l[-1,-1] 
-       b = l.argmax()
-
-       if (context[0,-1].item()+b.item())%16 < 8:
-        middle = math.floor((context[0,-1].item()+b.item())/2)
-       else:
-         middle = math.ceil((context[0,-1].item()+b.item())/2) 
-
-       print( b.item()<context[0,-1].item()-7,b.item(),context[0,-1].item(), flush=True)  # Force immediate flushing
-       sys.stdout.flush()   
-       if (not (b.item() in white_o.union(red_o) or b.item()>context[0,-1].item()+9 or b.item()<context[0,-1].item()-9)) and middle in red_o:
-          print("else:",b.item(),white_o.union(red_o),context[0,-1].item(),"comer",middle, flush=True)  # Force immediate flushing
-          sys.stdout.flush() 
-          red_o.remove(middle)
-          white_o.remove(context[0,-1].item())
-          white_o.add(b.item())          
-          print (i,"TWO",context[0,-2],context[0,-1], flush=True)  # Force immediate flushing
-          sys.stdout.flush()
-          context = torch.cat([context, torch.Tensor([[33,b.item()]]).to(device)], dim=1)
-          print (i,"TWO depois",context[0,-2],context[0,-1], flush=True)  # Force immediate flushing
-          sys.stdout.flush()
-          i += 2
-          continue
-       print("NOT else:",b.item(),white_o.union(red_o),context,middle, flush=True)  # Force immediate flushing
-       sys.stdout.flush()
-      
-      if i%2 == 1:
-       print("i%2 == 1")
-       if b.item() in white_o.union(red_o) or abs(b.item() - context[0,-1].item())<3 or abs(b.item() - context[0,-1].item())>5:   
-        if k>3 and context[0,-2].item() != 33:
-          context = context[:, :-1]
-          i-=1
-          k = 1
-          continue
-        if context[0,-2].item() != 33:
-          k+=1
-          continue
-        else:
-          break         
-        
-    
-        
-      if i%2 == 0 and b.item() not in white_o:
-        print("i%2 == 0 and i>0 and b.item() not in white_o.union(red_o)", b.item(), flush=True)  # Force immediate flushing
-        sys.stdout.flush()
-        k+=1
-        continue
-  
-      context = torch.cat([context, torch.Tensor([[b.item()]]).to(device)], dim=1)
-      white_o.remove(context[0,-1].item())
-      white_o.add(b.item())
-        
-      print ("depois: ",b,context,white_o,red_o,i,k,quantos_33, flush=True)  # Force immediate flushing
-      sys.stdout.flush()
-      k=0
-      i+=1
-
-    
-    print("Cooontext:",context, flush=True)  # Force immediate flushing
-    sys.stdout.flush()
-
-    resposta =  str(context[0,-i].item()) 
-    while i>0:
-        resposta +=  "-" + str(context[0,-i].item())
-        i -= 1
-    return resposta
 
 
 if __name__ == '__main__':
