@@ -150,7 +150,7 @@ def ask_name():
     
     if resp=='':
         context = torch.Tensor([[0]]).int().to(device)
-        red_o = {1,2,3,4,5,6,7,8,9,10,11,12}
+        red_o = {1,2,3,4,5,6,7,8,9,10,11,12,0}
         white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
         print("RESTART", flush=True)  # Force immediate flushing
         sys.stdout.flush()
@@ -279,7 +279,13 @@ def ask_name():
          break
     print(i,"CONTEXT:",context, flush=True)  # Force immediate flushing
     sys.stdout.flush()           
-    return "hey"
+    
+    moves = context[0, -i:].int().tolist()
+    
+    # Convert list of numbers to a hyphen-separated string
+    return "-".join(map(str, moves))
+    
+    
 
 
 if __name__ == '__main__':
