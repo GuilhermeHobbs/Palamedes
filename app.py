@@ -157,22 +157,23 @@ def ask_name():
     resp = torch.tensor([[int(x) for x in resp.split('-')]])
     context = torch.cat([context, resp], dim=1)
 
-    for i in range(resp.shape[1]):
-      if resp[0, i].item()==33:  
-        if (resp[0, i-1].item()+resp[0, i+1].item())%16 < 8:
-             middle = math.floor((resp[0, i-1].item()+resp[0, i+1].item())/2)
-        else:
-             middle = math.ceil((resp[0, i-1].item()+resp[0, i+1].item())/2)
-        
-        white_o.remove(middle)
-        red_o.remove(resp[0, i-1].item())  
-        red_o.add(resp[0, i+1].item())
-        
-      else:
-       red_o.remove(resp[0, i].item())  
-       red_o.add(resp[0, i+1].item()) 
-      i+=2  
+    print("Resp", context)
+
+    red_o.remove(resp[0, 0].item())
+    if resp[0, 1].item() != 33:
+        red_o.add(resp[0, 1].item())
     
+    else:
+        i=1
+        while i<resp.shape[1] and resp[0, i].item() == 33:
+          if (resp[0, i-1].item()+resp[0, i+1].item())%16 < 8:
+             middle = math.floor((resp[0, i-1].item()+resp[0, i+1].item())/2)
+          else:
+             middle = math.ceil((resp[0, i-1].item()+resp[0, i+1].item())/2)
+          white_o.remove(middle)
+          i+=2
+        red_o.add(resp[0, i-1].item())
+
     
      
         
