@@ -205,7 +205,7 @@ def ask_name():
      sys.stdout.flush()
      j=0
      b=0
-     while b in red_o.union(white_o) and j<3:          
+     while b in red_o.union(white_o) and j<4:          
         logits, _ = m(context.int())
         logits = logits[-1,-1] 
         _, b = torch.topk(logits, j+1)
@@ -216,7 +216,7 @@ def ask_name():
         sys.stdout.flush() 
         j+=1    
        
-     if j==3:
+     if j==4:
          context = context[:, :-1]
          k = 1    
          a = 0 
@@ -224,6 +224,7 @@ def ask_name():
      
      context = torch.cat([context, torch.Tensor([[b]]).to(device)], dim=1) 
      i=2
+        
      print("Context after",context, flush=True)  # Force immediate flushing
      sys.stdout.flush()   
      if b==33:
@@ -238,7 +239,6 @@ def ask_name():
         print("Middle",middle, flush=True)  # Force immediate flushing
         sys.stdout.flush()    
         if c in red_o.union(white_o) or middle not in red_o:
-           
            context = context[:, :-2]
            print("if c in red_o.union(white_o) or middle not in red_o:",c) 
            k+=1
@@ -246,13 +246,14 @@ def ask_name():
            continue 
         else:
            context = torch.cat([context, torch.Tensor([[c]]).to(device)], dim=1)
+           k=0
            print("Context [[c]]",context, flush=True)  # Force immediate flushing
            sys.stdout.flush()    
            white_o.remove(a) 
            white_o.add(c)
            red_o.remove(middle)
            old_b = c   
-           i=3 ###
+           i=3 
            while End_of_jump == False:
             logits, _ = m(context.int())
             logits = logits[-1,-1] 
