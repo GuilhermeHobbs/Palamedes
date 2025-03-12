@@ -252,12 +252,13 @@ def ask_name():
            white_o.add(c)
            red_o.remove(middle)
            old_b = c   
-           i=3
+           i=3 ###
            while End_of_jump == False:
             logits, _ = m(context.int())
             logits = logits[-1,-1] 
             a = logits.argmax().item()
             print("a = logits.argmax().item()",a)   
+            print(context,logits)
             if a != 33:
                 End_of_jump = True
             else:
