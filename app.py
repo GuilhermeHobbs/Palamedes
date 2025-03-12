@@ -188,6 +188,7 @@ def ask_name():
     k=0 
     End_of_jump = False
     while End_of_jump == False:
+     print("Recomeçou",k) 
      while a not in white_o:  
       logits, _ = m(context.int())
       logits = logits[-1,-1] 
@@ -236,9 +237,12 @@ def ask_name():
             middle = math.ceil((a+c)/2)     
         print("Middle",middle, flush=True)  # Force immediate flushing
         sys.stdout.flush()    
-        if c in red_o.union(white_o) or middle not in red_o:     
+        if c in red_o.union(white_o) or middle not in red_o:
+           
            context = context[:, :-2]
-           k+=1         
+           print("if c in red_o.union(white_o) or middle not in red_o:",c) 
+           k+=1
+           a=0 
            continue 
         else:
            context = torch.cat([context, torch.Tensor([[c]]).to(device)], dim=1)
