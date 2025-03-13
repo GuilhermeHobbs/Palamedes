@@ -159,6 +159,8 @@ def ask_name():
     resp = torch.tensor([[int(x) for x in resp.split('-')]])
     context = torch.cat([context, resp], dim=1)
 
+    context = context[:, -block_size+6:]
+    
     print("Resp", context, flush=True)  # Force immediate flushing
     sys.stdout.flush()
 
