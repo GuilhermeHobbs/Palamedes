@@ -138,8 +138,8 @@ model.eval()  # Disable dropout
 
 context = torch.Tensor([[0]]).int().to(device)  
 
-red_o = {1,2,3,4,5,6,7,8,9,10,11,12,0}
-white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
+white_o = {1,2,3,4,5,6,7,8,9,10,11,12}
+red_o = {0,21,22,23,24,25,26,27,28,29,30,31,32}
 
 
 @app.route('/move')
@@ -150,8 +150,8 @@ def ask_name():
     
     if resp=='':
         context = torch.Tensor([[0]]).int().to(device)
-        red_o = {1,2,3,4,5,6,7,8,9,10,11,12,0}
-        white_o = {21,22,23,24,25,26,27,28,29,30,31,32}
+        white_o = {1,2,3,4,5,6,7,8,9,10,11,12}
+        red_o = {21,22,23,24,25,26,27,28,29,30,31,32,0}
         print("RESTART", flush=True)  # Force immediate flushing
         sys.stdout.flush()
         return ""
