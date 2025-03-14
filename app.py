@@ -271,9 +271,11 @@ def ask_name():
             if a != 33:
                 End_of_jump = True
             else:
-                print("old_b = b",b, flush=True)  # Force immediate flushing
+                print("if b != 33",old_b, b, flush=True)  # Force immediate flushing
                 sys.stdout.flush()        
-                old_b = b
+                
+                if b != 33:
+                    old_b = b
                 context = torch.cat([context, torch.Tensor([[33]]).to(device)], dim=1)      
                 logits, _ = m(context.int())
                 logits = logits[-1,-1] 
