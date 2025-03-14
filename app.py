@@ -266,16 +266,20 @@ def ask_name():
             logits, _ = m(context.int())
             logits = logits[-1,-1] 
             a = logits.argmax().item()
-            print("a = logits.argmax().item()",a)   
+            print("a = logits.argmax().item()",a, flush=True)  # Force immediate flushing
+            sys.stdout.flush()    
             if a != 33:
                 End_of_jump = True
             else:
+                print("old_b = b",b, flush=True)  # Force immediate flushing
+                sys.stdout.flush()        
                 old_b = b
                 context = torch.cat([context, torch.Tensor([[33]]).to(device)], dim=1)      
                 logits, _ = m(context.int())
                 logits = logits[-1,-1] 
                 b = logits.argmax().item()
-            
+                print("b = logits.argmax().item()",b, flush=True)  # Force immediate flushing
+                sys.stdout.flush()        
                 if (old_b+b)%16 < 8:
                     middle = math.floor((old_b+b)/2)
                 else:
@@ -287,12 +291,13 @@ def ask_name():
                    End_of_jump = True
                 else:
                   context = torch.cat([context, torch.Tensor([[b]]).to(device)], dim=1)  ###########    
+                  print(context)
                   red_o.remove(middle)
                   print("red_o.remove(middle)", middle, flush=True)  # Force immediate flushing
                   sys.stdout.flush()  
-                  white_o.remove(old_b)
                   print("white_o.remove(old_b)", old_b, flush=True)  # Force immediate flushing
                   sys.stdout.flush()    
+                  white_o.remove(old_b)
                   white_o.add(b)
                   print("white_o.add(b)", b, flush=True)  # Force immediate flushing
                   sys.stdout.flush()      
