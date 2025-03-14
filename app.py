@@ -252,8 +252,14 @@ def ask_name():
            print("Context [[c]]",context, flush=True)  # Force immediate flushing
            sys.stdout.flush()    
            white_o.remove(a) 
+           print("white_o.remove(a)", a, flush=True)  # Force immediate flushing
+           sys.stdout.flush()
            white_o.add(c)
+           print("white_o.add(c)", c, flush=True)  # Force immediate flushing
+           sys.stdout.flush() 
            red_o.remove(middle)
+           print("red_o.remove(middle)", middle, flush=True)  # Force immediate flushing
+           sys.stdout.flush()  
            old_b = c   
            i=3 
            while End_of_jump == False:
@@ -261,7 +267,6 @@ def ask_name():
             logits = logits[-1,-1] 
             a = logits.argmax().item()
             print("a = logits.argmax().item()",a)   
-            print(context,logits)
             if a != 33:
                 End_of_jump = True
             else:
@@ -283,13 +288,23 @@ def ask_name():
                 else:
                   context = torch.cat([context, torch.Tensor([[b]]).to(device)], dim=1)  ###########    
                   red_o.remove(middle)
+                  print("red_o.remove(middle)", middle, flush=True)  # Force immediate flushing
+                  sys.stdout.flush()  
                   white_o.remove(old_b)
+                  print("white_o.remove(old_b)", old_b, flush=True)  # Force immediate flushing
+                  sys.stdout.flush()    
                   white_o.add(b)
+                  print("white_o.add(b)", b, flush=True)  # Force immediate flushing
+                  sys.stdout.flush()      
                   i+=2
                   print("i+=2",i)  
      else:  
          white_o.remove(a)
+         print("white_o.remove(a)", a, flush=True)  # Force immediate flushing
+         sys.stdout.flush()      
          white_o.add(b)
+         print("white_o.add(b)", b, flush=True)  # Force immediate flushing
+         sys.stdout.flush()      
          break
     print(i,"CONTEXT:",context, flush=True)  # Force immediate flushing
     sys.stdout.flush()           
