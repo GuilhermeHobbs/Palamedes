@@ -12,13 +12,13 @@ from torch.nn import functional as F
 app = Flask(__name__)
 CORS(app)  # This enables CORS for all routes
 
-block_size = 180
+block_size = 100
 vocab_size = 34
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 n_embd = 400 # 64
 n_head = 16  # 4
-n_layer = 12 # 18
+n_layer = 18
 dropout = 0.2
 # ------------
 
@@ -132,7 +132,7 @@ class BigramLanguageModel(nn.Module):
 model = BigramLanguageModel()
 m = model.to(device)
 
-m.load_state_dict(torch.load('data1004.pth', map_location=torch.device('cpu')))
+m.load_state_dict(torch.load('data1404.pth', map_location=torch.device('cpu')))
 
 model.eval()  # Disable dropout
 
