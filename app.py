@@ -17,9 +17,9 @@ vocab_size = 34
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 n_embd = 400 # 64
-n_head = 16  # 4
-n_layer = 18
-dropout = 0.2
+n_head = 10  # 4
+n_layer = 16
+dropout = 0.1
 # ------------
 
 @torch.no_grad()
@@ -132,7 +132,7 @@ class BigramLanguageModel(nn.Module):
 model = BigramLanguageModel()
 m = model.to(device)
 
-m.load_state_dict(torch.load('data1404.pth', map_location=torch.device('cpu')))
+m.load_state_dict(torch.load('data1704.pth', map_location=torch.device('cpu')))
 
 model.eval()  # Disable dropout
 
