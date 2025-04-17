@@ -12,14 +12,14 @@ from torch.nn import functional as F
 app = Flask(__name__)
 CORS(app)  # This enables CORS for all routes
 
-block_size = 100
+block_size = 120
 vocab_size = 34
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 n_embd = 400 # 64
-n_head = 10  # 4
-n_layer = 16
-dropout = 0.1
+n_head = 16  # 4
+n_layer = 24
+dropout = 0.2
 # ------------
 
 @torch.no_grad()
